@@ -7,8 +7,7 @@ from django_e2e_runner.server import DjangoTestServer
 from django_e2e_runner.test_runner import start_test_runner
 
 
-DJANGO_SETTINGS_MODULE = 'GabinetProject.settings_testing'
-KEEP_DB = True
+# TODO move to command line arg/settings file; enforce with global_transaction
 THREADED_SERVER = False
 
 

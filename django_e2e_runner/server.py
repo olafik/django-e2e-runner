@@ -38,7 +38,8 @@ class DjangoTestServer(object):
             },
         )
 
-        with override_settings(ROOT_URLCONF='django_e2e_runner.urls'):
+        with override_settings(ROOT_URLCONF='django_e2e_runner.urls',
+                               ORIG_ROOT_URLCONF=settings.ROOT_URLCONF):
             self.server_process.start()
 
         if not wait_net_service(self.address, self.port, timeout=10):
