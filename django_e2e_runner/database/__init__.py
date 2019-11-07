@@ -12,11 +12,11 @@ __all__ = [
 ]
 
 
-def setup_database():
+def setup_database(*args, **kwargs):
     db_class = import_string(settings.DATABASE_CLASS)
     if issubclass(db_class, BaseDatabase):
         db = db_class()
-        db.setup()
+        db.setup(*args, **kwargs)
         return db
 
     raise TypeError("'DATABASE_CLASS' should be a subclass of "

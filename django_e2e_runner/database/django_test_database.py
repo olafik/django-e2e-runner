@@ -8,9 +8,9 @@ class DjangoTestDatabase(BaseDatabase):
     def __init__(self):
         self.old_config = {}
 
-    def setup(self):
+    def setup(self, keepdb=settings.KEEP_DATABASE):
         self.old_config = setup_databases(1, False,
-                                          keepdb=settings.KEEP_DATABASE)
+                                          keepdb=keepdb)
 
-    def teardown(self):
-        teardown_databases(self.old_config, 1, keepdb=settings.KEEP_DATABASE)
+    def teardown(self, keepdb=settings.KEEP_DATABASE):
+        teardown_databases(self.old_config, 1, keepdb=keepdb)

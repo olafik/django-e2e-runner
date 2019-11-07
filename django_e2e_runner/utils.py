@@ -52,3 +52,13 @@ def wrap_subprocess(wrapped_function, suppress_output=False):
         wrapped_function(*args, **kwargs)
 
     return wrapper
+
+
+def parse_command_line_bool_arg(arg):
+    upper_arg = str(arg).upper()
+    if 'TRUE'.startswith(upper_arg):
+        return True
+    elif 'FALSE'.startswith(upper_arg):
+        return False
+    else:
+        return bool(arg)

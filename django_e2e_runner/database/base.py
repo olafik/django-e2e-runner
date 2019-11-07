@@ -1,10 +1,10 @@
 class BaseDatabase(object):
-    def setup(self):
+    def setup(self, *args, **kwargs):
         raise NotImplementedError(
             'subclasses of BaseDatabase may require a setup() method'
         )
 
-    def teardown(self):
+    def teardown(self, *args, **kwargs):
         raise NotImplementedError(
             'subclasses of BaseDatabase may require a teardown() method'
         )
