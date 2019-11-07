@@ -11,6 +11,7 @@ class GlobalTransaction(BaseDataManager):
     def pre_load_setup(self):
         connection = get_connection()
         connection.settings_dict['AUTOCOMMIT'] = False  # TODO
+        connection.settings_dict["CONN_MAX_AGE"] = None
 
         global atomic
         atomic = transaction.atomic(using=DEFAULT_DB_ALIAS)
