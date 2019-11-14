@@ -43,9 +43,9 @@ def wait_net_service(server, port, timeout=None):
             return True
 
 
-def wrap_subprocess(wrapped_function, suppress_output=False):
+def wrap_subprocess(wrapped_function, verbose=True):
     def wrapper(*args, **kwargs):
-        if suppress_output:
+        if not verbose:
             f = open(os.devnull, 'w')
             sys.stdout = f
             sys.stderr = f

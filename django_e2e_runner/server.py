@@ -9,21 +9,21 @@ from django_e2e_runner.utils import wrap_subprocess, wait_net_service
 
 
 class DjangoTestServer(object):
-    def __init__(self, use_threading=False):
+    def __init__(self, use_threading=False, verbose=False):
         self.address = settings.SERVER_IP
         self.port = settings.SERVER_PORT
         self.use_threading = use_threading \
             and connection.features.test_db_allows_multiple_connections
         self.server_process = None
+        self.verbose = verbose
 
     @property
     def addrport(self):
         return '{}:{}'.format(self.address, str(self.port))
 
     def start(self):
-        # TODO suppress_output configurable from command line/settings
         self.server_process = Process(
-            target=wrap_subprocess(call_command, suppress_output=True),
+            target=wrap_subprocess(call_command, verbose=self.verbose),
             args=('runserver',),
             kwargs={
                 'addrport': self.addrport,

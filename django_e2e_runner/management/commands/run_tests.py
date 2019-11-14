@@ -32,6 +32,11 @@ class Command(BaseCommand):
             help='Preserves the test DB between runs.'
         )
         parser.add_argument(
+            '-o', '--server-output', dest='server_output',
+            default=False,
+            help='Prints Django server output to the stdout',
+        )
+        parser.add_argument(
             '-runner', nargs=argparse.REMAINDER,
             help='All remaining arguments will be forwarded to the test runner'
         )
@@ -46,7 +51,10 @@ class Command(BaseCommand):
 
         # Run Django test server
         self.stdout.write('Starting Django test server... ', ending='')
-        server = DjangoTestServer(use_threading=THREADED_SERVER)
+        server_output = parse_command_line_bool_arg(
+            options.get('server_output'))
+        server = DjangoTestServer(use_threading=THREADED_SERVER,
+                                  verbose=server_output)
         try:
             if not server.start():
                 self.stdout.write(self.style.ERROR('FAILED'))
