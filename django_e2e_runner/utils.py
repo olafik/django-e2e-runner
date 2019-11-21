@@ -1,4 +1,5 @@
 import errno
+import logging
 import os
 import socket
 import sys
@@ -49,6 +50,22 @@ def wrap_subprocess(wrapped_function, verbose=True):
             f = open(os.devnull, 'w')
             sys.stdout = f
             sys.stderr = f
+
+            logging_config = {
+                'handlers': {
+                    'h': {
+                        'class': 'logging.NullHandler',
+                    },
+                },
+                'loggers': {
+                    '': {
+                        'handlers': ['h'],
+                    },
+                },
+                'version': 1,
+            }
+            logging.config.dictConfig(logging_config)
+
         wrapped_function(*args, **kwargs)
 
     return wrapper
