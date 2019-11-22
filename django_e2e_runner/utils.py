@@ -1,8 +1,5 @@
 import errno
-import logging
-import os
 import socket
-import sys
 from time import time as now
 
 
@@ -42,33 +39,6 @@ def wait_net_service(server, port, timeout=None):
         else:
             s.close()
             return True
-
-
-def wrap_subprocess(wrapped_function, verbose=True):
-    def wrapper(*args, **kwargs):
-        if not verbose:
-            f = open(os.devnull, 'w')
-            sys.stdout = f
-            sys.stderr = f
-
-            logging_config = {
-                'handlers': {
-                    'h': {
-                        'class': 'logging.NullHandler',
-                    },
-                },
-                'loggers': {
-                    '': {
-                        'handlers': ['h'],
-                    },
-                },
-                'version': 1,
-            }
-            logging.config.dictConfig(logging_config)
-
-        wrapped_function(*args, **kwargs)
-
-    return wrapper
 
 
 def parse_command_line_bool_arg(arg):

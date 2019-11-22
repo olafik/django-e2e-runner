@@ -9,7 +9,7 @@ __all__ = [
 
 
 def start_test_runner(runner_args):
-    test_runner_class = import_string(settings.E2E_TEST_RUNNER['class'])
+    test_runner_class = import_string(settings.E2E_TEST_RUNNER_CLASS)
     test_runner = test_runner_class()
     test_runner.start(runner_args)
     return test_runner
