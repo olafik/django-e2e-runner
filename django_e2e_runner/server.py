@@ -1,12 +1,13 @@
 import logging
 import os
+import platform
 import sys
 from multiprocessing import Process
 
 import django
 from django.core.management import call_command
-from django.db import connection
 from django.test.utils import override_settings
+from django.utils.module_loading import import_string
 
 from django_e2e_runner import settings
 from django_e2e_runner.utils import wait_net_service
@@ -16,8 +17,7 @@ class DjangoTestServer(object):
     def __init__(self, use_threading=False, verbose=False):
         self.address = settings.SERVER_IP
         self.port = settings.SERVER_PORT
-        self.use_threading = use_threading \
-            and connection.features.test_db_allows_multiple_connections
+        self.use_threading = use_threading
         self.server_process = None
         self.verbose = verbose
 
@@ -37,7 +37,7 @@ class DjangoTestServer(object):
 
         self.server_process.start()
 
-        if not wait_net_service(self.address, self.port, timeout=10):
+        if not wait_net_service(self.address, self.port, timeout=30):
             self.terminate()
             return False
 
@@ -76,6 +76,14 @@ def runserver_wrapper(addrport, use_threading, verbose=True):
 
     with override_settings(ROOT_URLCONF='django_e2e_runner.urls',
                            ORIG_ROOT_URLCONF=settings.ROOT_URLCONF):
+        db_class = import_string(settings.DATABASE_CLASS)
+
+        if platform.system() == 'Windows':
+            db_class.connect_to_test_database()
+
+        use_threading = use_threading \
+            and db_class.allows_multiple_connections()
+
         call_command(
             'runserver',
             addrport=addrport,
