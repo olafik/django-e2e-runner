@@ -49,4 +49,5 @@ class DjangoTestServer(object):
         return True
 
     def terminate(self):
-        self.server_process.terminate()
+        if self.server_process.is_alive():
+            self.server_process.terminate()
