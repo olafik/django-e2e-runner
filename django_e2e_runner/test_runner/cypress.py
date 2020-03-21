@@ -13,3 +13,4 @@ class Cypress(object):
             cwd=settings.E2E_TEST_RUNNER_BASE_DIR,
         )
         p_cypress.wait()
+        return p_cypress.returncode

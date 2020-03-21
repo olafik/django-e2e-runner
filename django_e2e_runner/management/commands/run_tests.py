@@ -1,6 +1,8 @@
 import argparse
+import os
 
-from django.core.management.base import BaseCommand, CommandParser
+from django.core.management.base import BaseCommand, CommandParser, \
+    CommandError
 
 from django_e2e_runner import settings
 from django_e2e_runner.database import setup_database
@@ -65,7 +67,9 @@ class Command(BaseCommand):
             # Run the test suite
             self.stdout.write('Starting test runner...')
             runner_args = options.get('runner') or []
-            test_runner = start_test_runner(runner_args)
+            test_runner_return_code = start_test_runner(runner_args)
+            if test_runner_return_code is not os.EX_OK:
+                raise CommandError('Test run has failed')
         finally:
             # Stop the server and teardown the test database
             self.stdout.write('Shutting down Django server... ', ending='')
