@@ -19,3 +19,4 @@ E2E_TEST_RUNNER_EXECUTABLE = os.path.join(
     'tests/e2e/node_modules/.bin/cypress'
     + ('.cmd' if platform.system() == 'Windows' else '')
 )
+E2E_TEST_RUNNER_DOCKER_IMAGE = 'cypress/included:12.17.1'

@@ -39,6 +39,16 @@ class Command(BaseCommand):
             help='Prints Django server output to the stdout',
         )
         parser.add_argument(
+            '--docker-runner', dest='runner_in_docker',
+            default=False,
+            help='Run the test runner in a Docker container',
+        )
+        parser.add_argument(
+            '--docker-image', dest='runner_docker_image',
+            default=settings.E2E_TEST_RUNNER_DOCKER_IMAGE,
+            help='Docker image to use for the test runner'
+        )
+        parser.add_argument(
             '-runner', nargs=argparse.REMAINDER,
             help='All remaining arguments will be forwarded to the test runner'
         )
@@ -67,7 +77,12 @@ class Command(BaseCommand):
             # Run the test suite
             self.stdout.write('Starting test runner...')
             runner_args = options.get('runner') or []
-            test_runner_return_code = start_test_runner(runner_args)
+            runner_in_docker = parse_command_line_bool_arg(
+                options.get('runner_in_docker'))
+            docker_image = options.get('runner_docker_image')
+            test_runner_return_code = start_test_runner(
+                runner_args, runner_in_docker, docker_image
+            )
             if test_runner_return_code is not os.EX_OK:
                 raise CommandError('Test run has failed')
         finally:

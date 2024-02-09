@@ -4,12 +4,23 @@ from django_e2e_runner import settings
 
 
 class Cypress(object):
-    def start(self, runner_args):
+    def start(self, runner_args, run_in_docker=False, docker_image=None):
         if len(runner_args) == 0:
             runner_args = ['run']
-        runner_args.insert(0, settings.E2E_TEST_RUNNER_EXECUTABLE)
+        if run_in_docker:
+            run_cmd = (
+                'docker run --net=host '
+                '-v {base_dir}:/e2e '
+                '-w /e2e '
+                '{image}'
+            ).format(
+                base_dir=settings.E2E_TEST_RUNNER_BASE_DIR,
+                image=docker_image,
+            ).split() + runner_args
+        else:
+            run_cmd = [settings.E2E_TEST_RUNNER_EXECUTABLE] + runner_args
         p_cypress = subprocess.Popen(
-            runner_args,
+            run_cmd,
             cwd=settings.E2E_TEST_RUNNER_BASE_DIR,
         )
         p_cypress.wait()
